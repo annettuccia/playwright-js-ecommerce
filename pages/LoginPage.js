@@ -1,4 +1,5 @@
 import { BasePage } from './BasePage.js';
+import { URLS } from '../config/url.js'
 
 class LoginPage extends BasePage {
     constructor(page) {
@@ -16,7 +17,7 @@ class LoginPage extends BasePage {
     }
 
     async gotoLoginPage() {
-        await this.navigate('/login');
+        await this.navigate(URLS.login);
         await this.waitForElementVisible(this.emailInput);
         await this.waitForElementVisible(this.passwordInput);
         await this.waitForElementVisible(this.loginBtn);
@@ -42,7 +43,7 @@ class LoginPage extends BasePage {
     async gotoRegisterPage() {
         console.log(`Click register link`);
         await this.registerLink.click();
-        await this.page.waitForURL('**/register');
+        await this.page.waitForURL(`**${URLS.register}`);
         console.log(`User is on register page`);
     }
 

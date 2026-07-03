@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { RegistrationPage } from '../pages/RegistrationPage.js';
+import { URLS } from '../config/url.js';
 
 test.describe('Registration functionality', () => {
     let registrationPage;
@@ -55,7 +56,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.gotoRegistrationPage();
         await registrationPage.gotoLoginPage();
 
-        await expect(page).toHaveURL('/login');
+        await expect(page).toHaveURL(URLS.login);
     });
 
     test('TC#15: Registration with Enter key', async ({ page }) => {
@@ -74,7 +75,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register({});
 
         await registrationPage.getRequiredFirstNameMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#17: Registration with empty first name', async ({ page }) => {
@@ -89,7 +90,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getRequiredFirstNameMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#18: Registration with empty last name', async ({ page }) => {
@@ -104,7 +105,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getRequiredLastNameMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#19: Registration with numbers in name fields', async ({ page }) => {
@@ -120,7 +121,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getErrorRegistrationMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#20: Registration with empty email', async ({ page }) => {
@@ -134,7 +135,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getRequiredEmailMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#21: Registration with invalid email format', async ({ page }) => {
@@ -148,7 +149,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getErrorRegistrationMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#22: Registration with existing email', async ({ page }) => {
@@ -162,7 +163,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getErrorRegistrationMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#23: Registration with empty username', async ({ page }) => {
@@ -176,7 +177,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getRequiredUsernameMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#24: Registration with existing username', async ({ page }) => {
@@ -190,7 +191,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getErrorRegistrationMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#25: Registration with empty phone', async ({ page }) => {
@@ -205,7 +206,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getRequiredPhoneMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#26: Registration with invalid phone format (no +48)', async ({ page }) => {
@@ -220,7 +221,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getErrorRegistrationMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#27: Registration with invalid phone format (too long)', async ({ page }) => {
@@ -235,7 +236,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getErrorRegistrationMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#28: Registration with existing phone', async ({ page }) => {
@@ -250,7 +251,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getErrorRegistrationMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#29: Registration with empty password', async ({ page }) => {
@@ -265,7 +266,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getRequiredPasswordMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#30: Registration with short password', async ({ page }) => {
@@ -280,7 +281,7 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getErrorRegistrationMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 
     test('TC#31: Registration with weak password', async ({ page }) => {
@@ -295,6 +296,6 @@ test.describe('Registration functionality', () => {
         await registrationPage.register(user);
 
         await registrationPage.getErrorRegistrationMessage();
-        await expect(page).toHaveURL('/register');
+        await expect(page).toHaveURL(URLS.register);
     });
 });

@@ -1,4 +1,5 @@
 import { BasePage } from './BasePage.js';
+import { URLS } from '../config/url.js';
 
 class RegistrationPage extends BasePage {
     constructor(page) {
@@ -24,7 +25,7 @@ class RegistrationPage extends BasePage {
     }
 
     async gotoRegistrationPage() {
-        await this.navigate('/register');
+        await this.navigate(URLS.register);
         await this.waitForElementVisible(this.firstNameInput);
         await this.waitForElementVisible(this.lastNameInput);
         await this.waitForElementVisible(this.emailInput);
@@ -90,7 +91,7 @@ class RegistrationPage extends BasePage {
     async gotoLoginPage() {
         console.log(`Click login link`);
         await this.loginLink.click();
-        await this.page.waitForURL('**/login');
+        await this.page.waitForURL(`**${URLS.login}`);
         console.log(`User is on login page`);
     }
 
@@ -196,16 +197,6 @@ class RegistrationPage extends BasePage {
         const visible = await this.requiredPasswordMessage.isVisible();
         console.log(`Required password message visible: ${visible}`);
         return visible;
-    }
-
-    async clearAllFields() {
-        console.log(`Clearing all registration fields`);
-        await this.firstNameInput.clear();
-        await this.lastNameInput.clear();
-        await this.emailInput.clear();
-        await this.usernameInput.clear();
-        await this.phoneInput.clear();
-        await this.passwordInput.clear();
     }
 }
 
