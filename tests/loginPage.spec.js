@@ -8,7 +8,7 @@ test.describe('Login functionality', () => {
 
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
-        console.log('Starting new login test with a new login page');
+        console.log('\nStarting new login test with a new login page\n');
     });
 
     test('TC#1: Administrator login with the correct email and password', async ({ page }) => {
