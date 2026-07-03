@@ -8,7 +8,9 @@ class LoginPage extends BasePage {
         this.passwordInput = page.locator('input[name="password"]');
         this.loginBtn = page.locator('button[type="submit"]');
         this.registerLink = page.locator('a:has-text("Зарегистрироваться")');
+
         this.errorLoginMessage = page.locator('[data-sonner-toast][data-type="error"]').filter({ hasText: 'Неверный email или пароль' });
+
         this.requiredPasswordMessage = page.getByText('Пароль обязателен');
         this.requiredEmailMessage = page.getByText('Email обязателен');
     }
@@ -22,43 +24,65 @@ class LoginPage extends BasePage {
     }
 
     async login(email, password) {
-        console.log(`Login with ${email} and ${password} credentials`);
+        console.log(`Login with ${email} credentials`);
         await this.emailInput.fill(email);
         await this.passwordInput.fill(password);
         await this.loginBtn.click();
-        console.log(`Login btn clicked`);
+        console.log(`Login button clicked`);
     }
 
     async loginWithEnterKey(email, password) {
-        console.log(`Login with ${email} and ${password} credentials through Enter key`);
+        console.log(`Login with ${email} credentials through Enter key`);
         await this.emailInput.fill(email);
         await this.passwordInput.fill(password);
         await this.passwordInput.press('Enter');
+        console.log(`Enter key pressed`);
     }
 
-    async gotoRegisterPage(){
-        console.log(`Click register link`)
+    async gotoRegisterPage() {
+        console.log(`Click register link`);
         await this.registerLink.click();
         await this.page.waitForURL('**/register');
         console.log(`User is on register page`);
     }
 
-    async getErrorLoginMessage(){
+    async getErrorLoginMessage() {
         await this.waitForElementVisible(this.errorLoginMessage);
         const message = await this.errorLoginMessage.textContent();
         console.log(`Error: ${message}`);
+        return message;
     }
 
-    async getRequiredPasswordMessage(){
+    async getRequiredPasswordMessage() {
         await this.waitForElementVisible(this.requiredPasswordMessage);
         const message = await this.requiredPasswordMessage.textContent();
         console.log(`Error: ${message}`);
+        return message;
     }
 
-    async getRequiredEmailMessage(){
+    async getRequiredEmailMessage() {
         await this.waitForElementVisible(this.requiredEmailMessage);
         const message = await this.requiredEmailMessage.textContent();
         console.log(`Error: ${message}`);
+        return message;
+    }
+
+    async isErrorLoginMessageVisible() {
+        const visible = await this.errorLoginMessage.isVisible();
+        console.log(`Error login message visible: ${visible}`);
+        return visible;
+    }
+
+    async isRequiredPasswordMessageVisible() {
+        const visible = await this.requiredPasswordMessage.isVisible();
+        console.log(`Required password message visible: ${visible}`);
+        return visible;
+    }
+
+    async isRequiredEmailMessageVisible() {
+        const visible = await this.requiredEmailMessage.isVisible();
+        console.log(`Required email message visible: ${visible}`);
+        return visible;
     }
 }
 
