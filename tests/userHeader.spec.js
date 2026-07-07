@@ -21,8 +21,8 @@ test.describe('User header functionality', () => {
         await loginPage.login(CREDENTIALS.user1.email, CREDENTIALS.user1.password);
         console.log(`User with email ${CREDENTIALS.user1.email} is authenticated as a norman user\n`);
 
-        await catalogPage.gotoCatalogPage();
         await expect(page).toHaveURL(URLS.catalog);
+        await catalogPage.gotoCatalogPage();
     });
 
     test('TC#32: Go to cart page', async ({ page }) => {
