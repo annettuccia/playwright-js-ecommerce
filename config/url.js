@@ -1,7 +1,7 @@
 export const URLS = {
     login: '/login',
     register: '/register',
-    catalog: '/',
+    catalog: '',
     cart: '/cart',
     orders: '/orders',
     profile: '/profile'

@@ -9,7 +9,6 @@ export class BasePage {
         console.log(`Navigating to: ${url}`);
         await this.page.goto(url);
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForLoadState('networkidle');
         console.log(`Page loaded`);
     }
 

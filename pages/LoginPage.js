@@ -29,6 +29,7 @@ class LoginPage extends BasePage {
         await this.emailInput.fill(email);
         await this.passwordInput.fill(password);
         await this.loginBtn.click();
+        await this.page.waitForURL(`**${URLS.catalog}`);
         console.log(`Login button clicked`);
     }
 
