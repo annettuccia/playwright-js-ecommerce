@@ -4,5 +4,6 @@ export const URLS = {
     catalog: '',
     cart: '/cart',
     orders: '/orders',
-    profile: '/profile'
+    profile: '/profile',
+    detailed: '/product'
 };
