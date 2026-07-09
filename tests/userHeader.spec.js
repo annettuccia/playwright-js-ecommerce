@@ -45,12 +45,12 @@ test.describe('User header functionality', () => {
 
     test('TC#34: User is displayed (drop-down menu can be opened)', async ({ page }) => {
         const username = await userHeader.getUsername();
-        expect(username).toContain('user1');
+        expect(username).toContain(CREDENTIALS.user1.username);
 
         const menuItems = await userHeader.getUserMenuItems();
 
-        expect(menuItems.userFullName).toContain('John Doe');
-        expect(menuItems.email).toContain('user1@test.com');
+        expect(menuItems.userFullName).toContain(CREDENTIALS.user1.fullName);
+        expect(menuItems.email).toContain(CREDENTIALS.user1.email);
         expect(menuItems.profileText).toContain('Профиль');
         expect(menuItems.ordersText).toContain('История заказов');
         expect(menuItems.logoutText).toContain('Выйти');
