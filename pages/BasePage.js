@@ -14,7 +14,8 @@ export class BasePage {
 
     async waitForElementVisible(locator) {
         console.log(`Waiting for element to be visible`);
-        await locator.waitFor({ state: 'visible' });
+        const element = locator.first();
+        await element.waitFor({ state: 'visible' });
         console.log(`Element is visible`);
     }
 }

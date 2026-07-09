@@ -6,12 +6,14 @@ class CatalogPage extends BasePage {
         super(page);
 
         this.catalogTitle = page.locator('h1:has-text("Каталог товаров")');
+        
         this.productCards = page.locator('.group.flex');
         this.productTitle = page.locator('.font-semibold.leading-none');
         this.productDescription = page.locator('.text-sm.text-muted-foreground');
         this.productPrice = page.locator('.text-2xl.font-bold.text-primary');
-        this.addToCartButton = page.locator('button:has-text("В корзину")');
+        this.addToCartBtn = page.locator('button:has-text("В корзину")');
         this.productImage = page.locator('img');
+
         this.emptyCatalogMessage = page.locator(':has-text("Ошибка загрузки данных")');
         this.successToast = page.locator('[data-sonner-toast][data-type="success"]');
     }
@@ -73,7 +75,7 @@ class CatalogPage extends BasePage {
         const card = this.productCards.nth(index);
         const product = await this.getProductDetails(index);
         console.log(`Adding to cart: ${product.title}`);
-        const addButton = card.locator(this.addToCartButton);
+        const addButton = card.locator(this.addToCartBtn);
         await addButton.click();
         await this.waitForElementVisible(this.successToast);
         console.log('Product added to cart successfully');
@@ -84,7 +86,7 @@ class CatalogPage extends BasePage {
         const product = await this.getProductDetails(index);
         console.log(`Adding ${product.title} ${times} times`);
         for (let i = 0; i < times; i++) {
-            const addButton = card.locator(this.addToCartButton);
+            const addButton = card.locator(this.addToCartBtn);
             await addButton.click();
             await this.waitForElementVisible(this.successToast);
         }
@@ -100,16 +102,16 @@ class CatalogPage extends BasePage {
         console.log('Navigated to product detail page');
     }
 
-    async isAddToCartButtonVisible(index = 0) {
+    async isaddToCartBtnVisible(index = 0) {
         const card = this.productCards.nth(index);
-        const visible = await card.locator(this.addToCartButton).isVisible();
+        const visible = await card.locator(this.addToCartBtn).isVisible();
         console.log(`Add to cart button visible: ${visible}`);
         return visible;
     }
 
-    async isAddToCartButtonEnabled(index = 0) {
+    async isaddToCartBtnEnabled(index = 0) {
         const card = this.productCards.nth(index);
-        const enabled = await card.locator(this.addToCartButton).isEnabled();
+        const enabled = await card.locator(this.addToCartBtn).isEnabled();
         console.log(`Add to cart button enabled: ${enabled}`);
         return enabled;
     }

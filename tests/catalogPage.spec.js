@@ -35,10 +35,10 @@ test.describe('Catalog functionality', () => {
         expect(product.price).not.toBeNull();
         expect(product.hasImage).toBeTruthy();
         
-        const isAddButtonVisible = await catalogPage.isAddToCartButtonVisible(0);
+        const isAddButtonVisible = await catalogPage.isaddToCartBtnVisible(0);
         expect(isAddButtonVisible).toBeTruthy();
         
-        const isAddButtonEnabled = await catalogPage.isAddToCartButtonEnabled(0);
+        const isAddButtonEnabled = await catalogPage.isaddToCartBtnEnabled(0);
         expect(isAddButtonEnabled).toBeTruthy();
 
         console.log('All product card elements present');
