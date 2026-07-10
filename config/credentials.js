@@ -16,5 +16,11 @@ export const CREDENTIALS = {
         password: 'user123',
         fullName: 'Jane Smith',
         username: 'user2'
+    },
+    fakeUser: {
+        email: 'fake.email@test.com',
+        password: 'fake123',
+        fullName: 'Jane Smith',
+        username: 'user3'
     }
 }
