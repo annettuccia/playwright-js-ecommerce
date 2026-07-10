@@ -1,5 +1,5 @@
 import { BasePage } from './BasePage.js';
-import { URLS } from '../config/url.js'
+import { URLS } from '../config/urls.js'
 
 class LoginPage extends BasePage {
     constructor(page) {

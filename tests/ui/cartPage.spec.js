@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage.js';
-import { CartPage } from '../pages/CartPage.js';
-import { CatalogPage } from '../pages/CatalogPage.js';
-import { UserHeader } from '../pages/UserHeader.js';
-import { URLS } from '../config/url.js';
-import { CREDENTIALS } from '../config/credentials.js';
+import { LoginPage } from '../../pages/LoginPage.js';
+import { CartPage } from '../../pages/CartPage.js';
+import { CatalogPage } from '../../pages/CatalogPage.js';
+import { UserHeader } from '../../pages/UserHeader.js';
+import { URLS } from '../../config/urls.js';
+import { CREDENTIALS } from '../../config/credentials.js';
 
 test.describe('Cart functionality', () => {
     let loginPage;

@@ -15,26 +15,23 @@ export default defineConfig({
 
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'API Tests',
+      testMatch: /tests\/api\/.*\.spec\.js/,
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          headless: true,
+        },
+      },
     },
-
-   /* {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    }, */
-  ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+      name: 'UI Tests',
+      testMatch: /tests\/ui\/.*\.spec\.js/,
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+      },
+    }
+  ]
 });
 

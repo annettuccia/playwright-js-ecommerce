@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage.js';
-import { URLS } from '../config/url.js';
-import { CREDENTIALS } from '../config/credentials.js';
+import { LoginPage } from '../../pages/LoginPage.js';
+import { URLS } from '../../config/urls.js';
+import { CREDENTIALS } from '../../config/credentials.js';
 
 test.describe('Login functionality', () => {
     let loginPage;

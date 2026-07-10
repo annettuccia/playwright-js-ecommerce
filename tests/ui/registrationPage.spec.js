@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { RegistrationPage } from '../pages/RegistrationPage.js';
-import { URLS } from '../config/url.js';
-import { getValidUser } from '../helpers/testDataUser.js';
+import { RegistrationPage } from '../../pages/RegistrationPage.js';
+import { URLS } from '../../config/urls.js';
+import { getValidUser } from '../../helpers/testDataUser.js';
 
 test.describe('Registration functionality', () => {
     let registrationPage;
