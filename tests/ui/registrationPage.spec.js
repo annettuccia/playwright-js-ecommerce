@@ -1,7 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { RegistrationPage } from '../../pages/RegistrationPage.js';
 import { URLS } from '../../config/urls.js';
-import { getValidUser } from '../../helpers/testDataUser.js';
+import {
+    getUiValidUser, getUiUserWithSpecialChars, getUiUserWithMinNameLength, getUiUserWithEmptyFirstName,
+    getUiUserWithEmptyLastName, getUiUserWithNumbersInName, getUiUserWithEmptyEmail, getUiUserWithInvalidEmail,
+    getUiUserWithExistingEmail, getUiUserWithEmptyUsername, getUiUserWithExistingUsername, getUiUserWithEmptyPhone,
+    getUiUserWithInvalidPhoneNoPlus48, getUiUserWithInvalidPhoneTooLong, getUiUserWithExistingPhone, getUiUserWithEmptyPassword,
+    getUiUserWithShortPassword, getUiUserWithWeakPassword
+} from '../../helpers/uiTestData.js';
 
 test.describe('Registration functionality', () => {
     let registrationPage;
@@ -12,33 +18,21 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#11: Registration with valid data', async ({ page }) => {
-        const user = getValidUser();
+        const user = getUiValidUser();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
     });
 
     test('TC#12: Registration with special characters in name', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            firstName: 'Иван-Михаил',
-            lastName: "о'Брайн",
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_m_${Date.now()}`
-        };
+        const user = getUiUserWithSpecialChars();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
     });
 
     test('TC#13: Registration with minimum name length (1 char)', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            firstName: 'И',
-            lastName: 'И',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_m_${Date.now()}`
-        };
+        const user = getUiUserWithMinNameLength();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -52,11 +46,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#15: Registration with Enter key', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiValidUser();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.registerWithEnterKey(user);
@@ -71,13 +61,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#17: Registration with empty first name', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            firstName: '',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
-
+        const user = getUiUserWithEmptyFirstName();
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
 
@@ -86,12 +70,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#18: Registration with empty last name', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            lastName: '',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithEmptyLastName();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -101,13 +80,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#19: Registration with numbers in name fields', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            firstName: 'Иван123',
-            lastName: 'Иванов123',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithNumbersInName();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -117,11 +90,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#20: Registration with empty email', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            email: '',
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithEmptyEmail();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -131,11 +100,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#21: Registration with invalid email format', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            email: 'ivvanov1test.com',
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithInvalidEmail();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -145,11 +110,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#22: Registration with existing email', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            email: 'ivanov1@test.com',
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithExistingEmail();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -159,11 +120,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#23: Registration with empty username', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            username: '',
-            email: `ivan${Date.now()}@test.com`
-        };
+        const user = getUiUserWithEmptyUsername();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -173,11 +130,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#24: Registration with existing username', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            username: 'ivanov_i',
-            email: `ivan${Date.now()}@test.com`
-        };
+        const user = getUiUserWithExistingUsername();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -187,12 +140,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#25: Registration with empty phone', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            phone: '',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithEmptyPhone();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -202,12 +150,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#26: Registration with invalid phone format (no +48)', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            phone: '123456789',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithInvalidPhoneNoPlus48();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -217,12 +160,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#27: Registration with invalid phone format (too long)', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            phone: '123456789012345678901234567890',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithInvalidPhoneTooLong();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -232,12 +170,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#28: Registration with existing phone', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            phone: '+48123456789',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithExistingPhone();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -247,12 +180,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#29: Registration with empty password', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            password: '',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithEmptyPassword();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -262,12 +190,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#30: Registration with short password', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            password: '1',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithShortPassword();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);
@@ -277,12 +200,7 @@ test.describe('Registration functionality', () => {
     });
 
     test('TC#31: Registration with weak password', async ({ page }) => {
-        const user = {
-            ...getValidUser(),
-            password: 'Password123',
-            email: `ivan${Date.now()}@test.com`,
-            username: `ivan_i_${Date.now()}`
-        };
+        const user = getUiUserWithWeakPassword();
 
         await registrationPage.gotoRegistrationPage();
         await registrationPage.register(user);

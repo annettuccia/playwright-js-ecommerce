@@ -1,4 +1,5 @@
-module.exports = {
+export const API_URLS = {
+    baseURL: 'http://localhost:5173/api',
     AUTH: {
         login: '/auth/login',
         register: '/auth/register',
