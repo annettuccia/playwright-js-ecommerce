@@ -27,7 +27,7 @@ test.describe('User information updation through API', () => {
 
         expect(responseBody).toHaveProperty('id');
         expect(responseBody).toHaveProperty('email', user.email);
-        expect(responseBody).toHaveProperty('username', user.username);;
+        expect(responseBody).toHaveProperty('username', user.username);
         expect(responseBody).toHaveProperty('firstname', user.firstname);
         expect(responseBody).toHaveProperty('lastname', user.lastname);
         expect(responseBody).toHaveProperty('phoneNumber', user.phoneNumber);

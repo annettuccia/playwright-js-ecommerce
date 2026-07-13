@@ -36,4 +36,4 @@ export const API_Messages = {
         orderProductNotFound: 'One or more products included in the order were not found',
         negativePrice: 'price must not be less than 0',
     }
-}
+};

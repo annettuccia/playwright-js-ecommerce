@@ -23,4 +23,4 @@ export const CREDENTIALS = {
         fullName: 'Jane Smith',
         username: 'user3'
     }
-}
+};
