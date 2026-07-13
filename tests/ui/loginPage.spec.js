@@ -35,7 +35,7 @@ test.describe('Login functionality', () => {
 
     test('TC#5: User login with a valid email and an incorrect password', async ({ page }) => {
         await loginPage.gotoLoginPage();
-        await loginPage.login(CREDENTIALS.user1.email, '123');
+        await loginPage.login(CREDENTIALS.user1.email, CREDENTIALS.fakeUser.password);
 
         await loginPage.getErrorLoginMessage();
         await expect(page).toHaveURL(URLS.login);
@@ -43,7 +43,7 @@ test.describe('Login functionality', () => {
 
     test('TC#6: User login attempt with an incorrect email address and the correct password of another user', async ({ page }) => {
         await loginPage.gotoLoginPage();
-        await loginPage.login('user3@test.com', CREDENTIALS.user1.password);
+        await loginPage.login(CREDENTIALS.fakeUser.email, CREDENTIALS.user1.password);
 
         await loginPage.getErrorLoginMessage();
         await expect(page).toHaveURL(URLS.login);

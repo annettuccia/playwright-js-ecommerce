@@ -4,7 +4,7 @@ export const API_Messages = {
         created: 'Created',
         badRequest: 'Bad Request',
         unauthorized: 'Unauthorized',
-        notFound: 'Not found',
+        notFound: 'Not Found',
         conflict: 'Conflict',
         ISE: 'Internal server error'
     },

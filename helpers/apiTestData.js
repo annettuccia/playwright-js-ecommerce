@@ -13,24 +13,28 @@ export const getApiValidUser = () => {
     };
 };
 
-export const getApiUserWithExistingEmail = () => ({
-    firstname: 'Ivan',
-    lastname: 'Ivanov',
-    phoneNumber: '+1234567890',
-    email: 'admin@test.com',
-    username: `ivan${Date.now()}`,
-    password: 'password123',
-    role: 'USER'
-});
+export const getApiUserWithExistingEmail = () => {
+    const user = getValidUser();
+    return {
+        firstname: user.firstName,
+        lastname: user.lastName,
+        phoneNumber: user.phone,
+        email: 'admin@test.com',
+        username: user.username,
+        password: user.password,
+        role: 'USER'
+    };
+};
 
 export const getApiUserWithExistingUsername = () => {
+    const user = getValidUser();
     return {
-        firstname: 'Ivan',
-        lastname: 'Ivanov',
-        phoneNumber: '+1234567890',
+        firstname: user.firstName,
+        lastname: user.lastName,
+        phoneNumber: user.phone,
         email: `ivan.${Date.now()}@test.com`,
         username: 'admin',
-        password: 'password123',
+        password: user.password,
         role: 'USER'
     };
 };
@@ -47,3 +51,47 @@ export const getApiUserWithoutPassword = () => {
         role: 'USER'
     };
 };
+
+export const getApiUserDataUpdate = () => {
+    const user = getValidUser();
+    return {
+        firstname: user.firstName,
+        lastname: user.lastName,
+        phoneNumber: user.phone,
+        email: user.email,
+        username: user.username
+    };
+};
+
+export const getApiUserDataUpdateInvalidPhone = () => {
+    const user = getValidUser();
+    return {
+        firstname: user.firstName,
+        lastname: user.lastName,
+        phoneNumber: '+1987654321',
+        email: user.email,
+        username: user.username
+    };
+};
+
+export const getApiUserDataUpdatewithExistingEmail = () => {
+    const user = getValidUser();
+    return{
+        firstname: user.firstName,
+        lastname: user.lastName,
+        phoneNumber: user.phone,
+        email: 'admin@test.com',
+        username: user.username
+    };
+};
+
+export const getApiUserDataUpdatewithExistingUsername = () => {
+    const user = getValidUser();
+    return {
+        firstname: user.firstName,
+        lastname: user.lastName,
+        phoneNumber: user.phone,
+        email: user.email,
+        username: 'admin'
+    };
+}
