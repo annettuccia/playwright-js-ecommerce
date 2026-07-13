@@ -5,7 +5,7 @@ import { API_Messages } from '../../config/apiMessages.js';
 import {
     getApiUserDataUpdate, getApiUserDataUpdateInvalidPhone,
     getApiUserDataUpdatewithExistingEmail, getApiUserDataUpdatewithExistingUsername
-} from '../../helpers/apiTestData.js';
+} from '../../helpers/apiTestUserData.js';
 
 test.describe('User information updation through API', () => {
     let apiClient;

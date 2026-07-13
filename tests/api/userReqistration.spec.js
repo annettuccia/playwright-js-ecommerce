@@ -4,7 +4,7 @@ import { API_URLS } from '../../config/apiEndpoints.js';
 import { API_Messages } from '../../config/apiMessages.js';
 import {
     getApiValidUser, getApiUserWithExistingEmail, getApiUserWithExistingUsername, getApiUserWithoutPassword
-} from '../../helpers/apiTestData.js';
+} from '../../helpers/apiTestUserData.js';
 
 test.describe('API Registration functionality', () => {
     let apiClient;
