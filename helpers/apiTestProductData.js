@@ -21,6 +21,7 @@ export const getApiProductWithnegativePrice = () => {
         urlImage: product.urlImage
     };
 };
+
 export const getApiProductWithoutName = () => {
     const product = getValidProduct();
     return {
@@ -31,7 +32,8 @@ export const getApiProductWithoutName = () => {
         urlImage: product.urlImage
     };
 };
-export const getApiProductWithoutDescription = () => { 
+
+export const getApiProductWithoutDescription = () => {
     const product = getValidProduct();
     return {
         name: product.name,
@@ -41,6 +43,7 @@ export const getApiProductWithoutDescription = () => {
         urlImage: product.urlImage
     };
 };
+
 export const getApiProductWithoutCategory = () => {
     const product = getValidProduct();
     return {
@@ -51,6 +54,7 @@ export const getApiProductWithoutCategory = () => {
         urlImage: product.urlImage
     };
 };
+
 export const getApiProductWithoutImage = () => {
     const product = getValidProduct();
     return {
@@ -59,5 +63,11 @@ export const getApiProductWithoutImage = () => {
         price: product.price,
         category: product.category,
         urlImage: ''
+    };
+};
+
+export const productToBucketById = (id) => {
+    return {
+        productId: id
     };
 };

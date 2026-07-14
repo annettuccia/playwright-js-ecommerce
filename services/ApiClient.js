@@ -48,13 +48,19 @@ class ApiClient {
         return response;
     }
 
-    async delete(endpoint) {
+    async delete(endpoint, data = null) {
         const url = `${this.baseURL}${endpoint}`;
         console.log(`DELETE ${url}`);
 
-        const response = await this.request.delete(url, {
+        const options = {
             headers: this.headers
-        });
+        };
+
+        if (data) {
+            options.data = data;
+        }
+
+        const response = await this.request.delete(url, options);
 
         console.log(`Response status: ${response.status}`);
 

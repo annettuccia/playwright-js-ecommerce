@@ -10,7 +10,7 @@ export const API_URLS = {
         by_id: (id) => `/product/${id}`
     },
     BUCKET: {
-        base: '/bucket',
+        base: (id) => `/bucket/${id}`,
         add_product: (id) => `/bucket/${id}/addProduct`,
         remove_product: (id) => `/bucket/${id}/removeProduct`
     },
