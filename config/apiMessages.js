@@ -29,6 +29,7 @@ export const API_Messages = {
         invalidProductURL: 'urlImage must be a URL address',
         invalidLogin: 'Invalid email or password',
         invalidPhoneNumber: 'phoneNumber must be a valid phone number',
+        invalidOrderStatus: 'status must be one of the following values: PENDING, SHIPPED, DELIVERED, CANCELED',
         userNotFound: /User with ID \S+ not found/i,
         productNotFound: /Product with ID \S+ not found/i,
         bucketNotFound: /Bucket not found for user with ID \S+/i,

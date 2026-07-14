@@ -71,3 +71,20 @@ export const productToBucketById = (id) => {
         productId: id
     };
 };
+
+export const productToOrderById = (id, quantity) => {
+    return {
+        items: [
+            {
+                product_id: id,
+                quantity: quantity
+            }
+        ]
+    };
+};
+
+export const changeOrderStatus = (status) => {
+    return {
+        status: status
+    };
+};
