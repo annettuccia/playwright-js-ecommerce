@@ -1,9 +1,9 @@
-import { API_URLS } from '../config/apiEndpoints.js';
+import { API } from '../config/apiConstants.js';
 
 class ApiClient {
     constructor(request) {
         this.request = request;
-        this.baseURL = API_URLS.baseURL;
+        this.baseURL = API.URLS.baseURL;
         this.headers = {
             'Content-Type': 'application/json'
         };

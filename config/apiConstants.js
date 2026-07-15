@@ -1,14 +1,30 @@
-export const API_Messages = {
-    status: {
-        ok: 'OK',
-        created: 'Created',
-        badRequest: 'Bad Request',
-        unauthorized: 'Unauthorized',
-        notFound: 'Not Found',
-        conflict: 'Conflict',
-        ISE: 'Internal server error'
+import { STATUS_CODES } from "node:http";
+
+export const API = {
+    URLS: {
+        baseURL: 'http://localhost:5173/api',
+        auth: {
+            login: '/auth/login',
+            register: '/auth/register',
+            refresh: (id) => `/auth/${id}`
+        },
+        product: {
+            base: '/product',
+            byId: (id) => `/product/${id}`
+        },
+        bucket: {
+            base: (id) => `/bucket/${id}`,
+            addProduct: (id) => `/bucket/${id}/addProduct`,
+            removeProduct: (id) => `/bucket/${id}/removeProduct`
+        },
+        order: {
+            base: '/order',
+            byUserId: (id) => `/order/${id}`,
+            updateStatus: (id) => `/order/${id}/status`
+        }
     },
-    statusCode: {
+
+    STATUS: {
         ok: 200,
         created: 201,
         badRequest: 400,
@@ -17,7 +33,18 @@ export const API_Messages = {
         conflict: 409,
         ISE: 500
     },
-    message: {
+
+    STATUS_TEXT: {
+        ok: 'OK',
+        created: 'Created',
+        badRequest: 'Bad Request',
+        unauthorized: 'Unauthorized',
+        notFound: 'Not Found',
+        conflict: 'Conflict',
+        ISE: 'Internal server error'
+    },
+
+    MESSAGE: {
         emailExists: /Email.*already exists/i,
         usernameExists: /Username.*already exists/i,
         shortPassword: 'Password must be at least 8 characters long',
