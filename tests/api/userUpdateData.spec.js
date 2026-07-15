@@ -9,6 +9,11 @@ import {
 test.describe('User information updation through API', () => {
     let apiClient;
 
+    const USER_ID = {
+        existing: 2,
+        nonExisting: 2000
+    };
+
     test.beforeEach(async ({ request }) => {
         apiClient = new ApiClient(request);
         console.log('\nStarting new information updation test\n');
@@ -17,7 +22,7 @@ test.describe('User information updation through API', () => {
     test('API#9: Updating registered user data (all data is correct)', async ({ request }) => {
         const user = getApiUserDataUpdate();
 
-        const response = await apiClient.patch(API.URLS.auth.refresh(2), user);
+        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.existing), user);
 
         expect(response.status()).toBe(API.STATUS.ok);
 
@@ -36,7 +41,7 @@ test.describe('User information updation through API', () => {
     test('API#10: Updating data for a non-existent user', async ({ request }) => {
         const user = getApiUserDataUpdate();
 
-        const response = await apiClient.patch(API.URLS.auth.refresh(2000), user);
+        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.nonExisting), user);
 
         expect(response.status()).toBe(API.STATUS.notFound);
 
@@ -52,7 +57,7 @@ test.describe('User information updation through API', () => {
     test('API#11: Updating registered user details to an invalid phone number', async ({ request }) => {
         const user = getApiUserDataUpdateInvalidPhone();
 
-        const response = await apiClient.patch(API.URLS.auth.refresh(2), user);
+        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.existing), user);
 
         expect(response.status()).toBe(API.STATUS.badRequest);
 
@@ -68,7 +73,7 @@ test.describe('User information updation through API', () => {
     test('API#12: Updating registered user details to an email address that is already in use', async ({ request }) => {
         const user = getApiUserDataUpdatewithExistingEmail();
 
-        const response = await apiClient.patch(API.URLS.auth.refresh(2), user);
+        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.existing), user);
 
         expect(response.status()).toBe(API.STATUS.conflict);
 
@@ -84,7 +89,7 @@ test.describe('User information updation through API', () => {
     test('API#13: Updating registered user details to a username that is already in use', async ({ request }) => {
         const user = getApiUserDataUpdatewithExistingUsername();
 
-        const response = await apiClient.patch(API.URLS.auth.refresh(2), user);
+        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.existing), user);
 
         expect(response.status()).toBe(API.STATUS.conflict);
 

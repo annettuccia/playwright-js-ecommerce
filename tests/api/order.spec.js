@@ -6,6 +6,23 @@ import { productToOrderById, changeOrderStatus } from '../../helpers/apiTestProd
 test.describe('Order API tests', () => {
     let apiClient;
 
+    const USER_ID = {
+        existing: 2,
+        nonExisting: 2000
+    };
+
+    const PRODUCT_ID = {
+        existing: 3,
+        nonExisting: 3000
+    };
+
+    const ORDER_ID = {
+        existing: 1,
+        nonExisting: 1000
+    };
+
+    const VALID_STATUSES = ['PENDING', 'SHIPPED', 'DELIVERED', 'CANCELED'];
+
     test.beforeEach(async ({ request }) => {
         apiClient = new ApiClient(request);
         console.log('\nStarting new order API test\n');
@@ -40,7 +57,7 @@ test.describe('Order API tests', () => {
     });
 
     test('API#36: Retrieve orders for an existing user by ID', async ({ request }) => {
-        const response = await apiClient.get(API.URLS.order.byUserId(2));
+        const response = await apiClient.get(API.URLS.order.byUserId(USER_ID.existing));
 
         expect(response.status()).toBe(API.STATUS.ok);
 
@@ -68,7 +85,7 @@ test.describe('Order API tests', () => {
     });
 
     test('API#37: Retrieve orders for a non-existent user by ID', async ({ request }) => {
-        const response = await apiClient.get(API.URLS.order.byUserId(2000));
+        const response = await apiClient.get(API.URLS.order.byUserId(USER_ID.nonExisting));
 
         expect(response.status()).toBe(API.STATUS.notFound);
 
@@ -82,9 +99,9 @@ test.describe('Order API tests', () => {
     });
 
     test('API#38: Create an order for an existing user (product exists)', async ({ request }) => {
-        const orderData = productToOrderById(1, 2);
+        const orderData = productToOrderById(PRODUCT_ID.existing, 2);
 
-        const response = await apiClient.post(API.URLS.order.byUserId(3), orderData);
+        const response = await apiClient.post(API.URLS.order.byUserId(USER_ID.existing), orderData);
 
         expect(response.status()).toBe(API.STATUS.created);
 
@@ -96,9 +113,9 @@ test.describe('Order API tests', () => {
     });
 
     test('API#39: Create an order for an existing user with a non-existent product', async ({ request }) => {
-        const orderData = productToOrderById(1000, 2);
+        const orderData = productToOrderById(PRODUCT_ID.nonExisting, 2);
 
-        const response = await apiClient.post(API.URLS.order.byUserId(3), orderData);
+        const response = await apiClient.post(API.URLS.order.byUserId(USER_ID.existing), orderData);
 
         expect(response.status()).toBe(API.STATUS.notFound);
 
@@ -117,7 +134,7 @@ test.describe('Order API tests', () => {
             ]
         };
 
-        const response = await apiClient.post(API.URLS.order.byUserId(3), orderData);
+        const response = await apiClient.post(API.URLS.order.byUserId(USER_ID.existing), orderData);
 
         expect(response.status()).toBe(API.STATUS.created);
 
@@ -131,7 +148,7 @@ test.describe('Order API tests', () => {
     test('API#41: Create an order for a non-existent user', async ({ request }) => {
         const orderData = productToOrderById(1, 2);
 
-        const response = await apiClient.post(API.URLS.order.byUserId(3000), orderData);
+        const response = await apiClient.post(API.URLS.order.byUserId(USER_ID.nonExisting), orderData);
 
         expect(response.status()).toBe(API.STATUS.notFound);
 
@@ -147,7 +164,7 @@ test.describe('Order API tests', () => {
     test('API#42: Update order status to PENDING', async ({ request }) => {
         const orderStatus = changeOrderStatus('PENDING');
 
-        const response = await apiClient.patch(API.URLS.order.updateStatus(1), orderStatus);
+        const response = await apiClient.patch(API.URLS.order.updateStatus(ORDER_ID.existing), orderStatus);
 
         expect(response.status()).toBe(API.STATUS.ok);
 
@@ -166,7 +183,7 @@ test.describe('Order API tests', () => {
     test('API#43: Update order status to SHIPPED', async ({ request }) => {
         const orderStatus = changeOrderStatus('SHIPPED');
 
-        const response = await apiClient.patch(API.URLS.order.updateStatus(2), orderStatus);
+        const response = await apiClient.patch(API.URLS.order.updateStatus(ORDER_ID.existing), orderStatus);
 
         expect(response.status()).toBe(API.STATUS.ok);
 
@@ -185,7 +202,7 @@ test.describe('Order API tests', () => {
     test('API#44: Update order status to DELIVERED', async ({ request }) => {
         const orderStatus = changeOrderStatus('DELIVERED');
 
-        const response = await apiClient.patch(API.URLS.order.updateStatus(1), orderStatus);
+        const response = await apiClient.patch(API.URLS.order.updateStatus(ORDER_ID.existing), orderStatus);
 
         expect(response.status()).toBe(API.STATUS.ok);
 
@@ -204,7 +221,7 @@ test.describe('Order API tests', () => {
     test('API#45: Update order status to CANCELED', async ({ request }) => {
         const orderStatus = changeOrderStatus('CANCELED');
 
-        const response = await apiClient.patch(API.URLS.order.updateStatus(2), orderStatus);
+        const response = await apiClient.patch(API.URLS.order.updateStatus(ORDER_ID.existing), orderStatus);
 
         expect(response.status()).toBe(API.STATUS.ok);
 
@@ -223,7 +240,7 @@ test.describe('Order API tests', () => {
     test('API#46: Update order status to an invalid value (anything other than PENDING, SHIPPED, DELIVERED, or CANCELLED)', async ({ request }) => {
         const orderStatus = changeOrderStatus('anything');
 
-        const response = await apiClient.patch(API.URLS.order.updateStatus(4), orderStatus);
+        const response = await apiClient.patch(API.URLS.order.updateStatus(ORDER_ID.existing), orderStatus);
 
         expect(response.status()).toBe(API.STATUS.badRequest);
 
@@ -239,7 +256,7 @@ test.describe('Order API tests', () => {
     test('API#47: Update order status for a non-existent user', async ({ request }) => {
         const orderStatus = changeOrderStatus('SHIPPED');
 
-        const response = await apiClient.patch(API.URLS.order.updateStatus(1000), orderStatus);
+        const response = await apiClient.patch(API.URLS.order.updateStatus(ORDER_ID.nonExisting), orderStatus);
 
         expect(response.status()).toBe(API.STATUS.notFound);
 

@@ -7,8 +7,13 @@ import {
 } from '../../helpers/apiTestProductData';
 import { db } from '../../config/dbCopy.js'
 
-test.describe('Create new product API tests', () => {
+test.describe('Product API tests', () => {
     let apiClient;
+
+    const PRODUCT_ID = {
+        existing: 4,
+        nonEXisting: 4000
+    };
 
     test.beforeEach(async ({ request }) => {
         apiClient = new ApiClient(request);
@@ -116,15 +121,6 @@ test.describe('Create new product API tests', () => {
         expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.badRequest);
         expect(responseBody).toHaveProperty('statusCode', API.STATUS.badRequest);
     });
-});
-
-test.describe('Get product data API tests', () => {
-    let apiClient;
-
-    test.beforeEach(async ({ request }) => {
-        apiClient = new ApiClient(request);
-        console.log('\nStarting new API get product data test\n');
-    });
 
     test('API#20: Get a list of all products in the catalog', async ({ request }) => {
         const response = await apiClient.get(API.URLS.product.base);
@@ -153,22 +149,22 @@ test.describe('Get product data API tests', () => {
     });
 
     test('API#21: Get an existing product by ID', async ({ request }) => {
-        const response = await apiClient.get(API.URLS.product.byId(1));
+        const response = await apiClient.get(API.URLS.product.byId(PRODUCT_ID.existing));
 
         expect(response.status()).toBe(API.STATUS.ok);
 
         const responseBody = await response.json();
         console.log('Response:', JSON.stringify(responseBody, null, 2));
 
-        expect(responseBody).toHaveProperty('id', db[1].id);
-        expect(responseBody).toHaveProperty('name', db[1].name);
-        expect(responseBody).toHaveProperty('description', db[1].description);
-        expect(responseBody).toHaveProperty('category', db[1].category);
-        expect(responseBody).toHaveProperty('urlImage', db[1].urlImage);
+        expect(responseBody).toHaveProperty('id', db[PRODUCT_ID.existing].id);
+        expect(responseBody).toHaveProperty('name', db[PRODUCT_ID.existing].name);
+        expect(responseBody).toHaveProperty('description', db[PRODUCT_ID.existing].description);
+        expect(responseBody).toHaveProperty('category', db[PRODUCT_ID.existing].category);
+        expect(responseBody).toHaveProperty('urlImage', db[PRODUCT_ID.existing].urlImage);
     });
 
     test('API#22: Get a non-existent product by ID', async ({ request }) => {
-        const response = await apiClient.get(API.URLS.product.byId(1000));
+        const response = await apiClient.get(API.URLS.product.byId(PRODUCT_ID.nonEXisting));
 
         expect(response.status()).toBe(API.STATUS.notFound);
 
@@ -180,20 +176,11 @@ test.describe('Get product data API tests', () => {
         expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.notFound);
         expect(responseBody).toHaveProperty('statusCode', API.STATUS.notFound);
     });
-});
-
-test.describe('Update & Delete product data API tests', () => {
-    let apiClient;
-
-    test.beforeEach(async ({ request }) => {
-        apiClient = new ApiClient(request);
-        console.log('\nStarting new API update(or delete) product data test\n');
-    });
 
     test('API#23: Update data for an existing product (all data is correct)', async ({ request }) => {
         const product = getApiValidProduct();
 
-        const response = await apiClient.patch(API.URLS.product.byId(5), product);
+        const response = await apiClient.patch(API.URLS.product.byId(PRODUCT_ID.existing), product);
 
         expect(response.status()).toBe(API.STATUS.ok);
 
@@ -215,7 +202,7 @@ test.describe('Update & Delete product data API tests', () => {
     test('API#24: Update data for a non-existent product', async ({ request }) => {
         const product = getApiValidProduct();
 
-        const response = await apiClient.patch(API.URLS.product.byId(5000), product);
+        const response = await apiClient.patch(API.URLS.product.byId(PRODUCT_ID.nonEXisting), product);
 
         expect(response.status()).toBe(API.STATUS.notFound);
 
@@ -229,22 +216,22 @@ test.describe('Update & Delete product data API tests', () => {
     });
 
     test('API#25: Remove an existing product from the catalog', async ({ request }) => {
-        const response = await apiClient.delete(API.URLS.product.byId(3));
+        const response = await apiClient.delete(API.URLS.product.byId(PRODUCT_ID.existing));
 
         expect(response.status()).toBe(API.STATUS.ok);
 
         const responseBody = await response.json();
         console.log('Response:', JSON.stringify(responseBody, null, 2));
 
-        expect(responseBody).toHaveProperty('id', db[3].id);
-        expect(responseBody).toHaveProperty('name', db[3].name);
-        expect(responseBody).toHaveProperty('description', db[3].description);
-        expect(responseBody).toHaveProperty('category', db[3].category);
-        expect(responseBody).toHaveProperty('urlImage', db[3].urlImage);
+        expect(responseBody).toHaveProperty('id', db[PRODUCT_ID.existing].id);
+        expect(responseBody).toHaveProperty('name', db[PRODUCT_ID.existing].name);
+        expect(responseBody).toHaveProperty('description', db[PRODUCT_ID.existing].description);
+        expect(responseBody).toHaveProperty('category', db[PRODUCT_ID.existing].category);
+        expect(responseBody).toHaveProperty('urlImage', db[PRODUCT_ID.existing].urlImage);
     });
 
     test('API#26: Remove a non-existent product from the catalog', async ({ request }) => {
-        const response = await apiClient.delete(API.URLS.product.byId(3000));
+        const response = await apiClient.delete(API.URLS.product.byId(PRODUCT_ID.nonEXisting));
 
         expect(response.status()).toBe(API.STATUS.notFound);
 
