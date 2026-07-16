@@ -2,8 +2,9 @@ import { test, expect } from '@playwright/test';
 import { ApiClient } from '../../services/apiClient.js';
 import { CREDENTIALS } from '../../config/credentials.js';
 import { API } from '../../config/apiConstants.js';
+import { assertSuccessResponse, assertErrorResponse, assertUserDataResponse } from '../../helpers/apiAssertions.js';
 
-test.describe('API Registration functionality', () => {
+test.describe('API Login functionality', () => {
     let apiClient;
 
     test.beforeEach(async ({ request }) => {
@@ -17,14 +18,19 @@ test.describe('API Registration functionality', () => {
             password: CREDENTIALS.admin.password
         };
 
+        console.log(`Starting login test with email: ${loginData.email}`);
         const response = await apiClient.post(API.URLS.auth.login, loginData);
+        const responseBody = await assertSuccessResponse(response, API.STATUS.created);
+        console.log(`User with email ${loginData.email} is logged in`);
 
-        expect(response.status()).toBe(API.STATUS.created);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('email', loginData.email);
+        assertUserDataResponse(responseBody, {
+            email: loginData.email,
+            username: responseBody.username,
+            role: responseBody.role,
+            firstname: responseBody.firstname,
+            lastname: responseBody.lastname,
+            phoneNumber: responseBody.phoneNumber
+        });
     });
 
     test('API#6: Login without password entered', async ({ request }) => {
@@ -32,18 +38,11 @@ test.describe('API Registration functionality', () => {
             email: CREDENTIALS.admin.email,
             password: ''
         };
-
+        console.log(`Starting login test without password`);
         const response = await apiClient.post(API.URLS.auth.login, loginData);
 
-        expect(response.status()).toBe(API.STATUS.badRequest);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toContain(API.MESSAGE.emptyPassword);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.badRequest);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.badRequest);
+        await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.emptyPassword);
+        console.log(`User is not logged in; an '${API.MESSAGE.emptyPassword}' error message occured`);
     });
 
     test('API#7: Login without email entered', async ({ request }) => {
@@ -51,18 +50,11 @@ test.describe('API Registration functionality', () => {
             email: '',
             password: CREDENTIALS.admin.password
         };
-
+        console.log(`Starting login test without email`);
         const response = await apiClient.post(API.URLS.auth.login, loginData);
 
-        expect(response.status()).toBe(API.STATUS.badRequest);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toContain(API.MESSAGE.emptyEmail);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.badRequest);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.badRequest);
+        await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.emptyEmail);
+        console.log(`User is not logged in; an '${API.MESSAGE.emptyEmail}' error message occured`);
     });
 
     test('API#8: Login with non existing user credentials', async ({ request }) => {
@@ -70,17 +62,10 @@ test.describe('API Registration functionality', () => {
             email: CREDENTIALS.fakeUser.email,
             password: CREDENTIALS.fakeUser.password
         };
-
+        console.log(`Starting login test with fake user credentials email: ${loginData.email}, password: ${loginData.password}`);
         const response = await apiClient.post(API.URLS.auth.login, loginData);
 
-        expect(response.status()).toBe(API.STATUS.unauthorized);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toContain(API.MESSAGE.invalidLogin);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.unauthorized);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.unauthorized);
+        await assertErrorResponse(response, API.STATUS.unauthorized, API.MESSAGE.invalidLogin);
+        console.log(`User is not logged in; an '${API.MESSAGE.invalidLogin}' error message occured`);
     });
 });

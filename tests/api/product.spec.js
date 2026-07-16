@@ -5,14 +5,17 @@ import {
     getApiProductWithnegativePrice, getApiProductWithoutCategory, getApiProductWithoutDescription,
     getApiProductWithoutImage, getApiProductWithoutName, getApiValidProduct
 } from '../../helpers/apiTestProductData';
-import { db } from '../../config/dbCopy.js'
+import { db } from '../../config/dbCopy.js';
+import {
+    assertSuccessResponse, assertErrorResponse, assertProductDataResponse, assertProductListResponse
+} from '../../helpers/apiAssertions.js';
 
 test.describe('Product API tests', () => {
     let apiClient;
 
     const PRODUCT_ID = {
         existing: 4,
-        nonEXisting: 4000
+        nonExisting: 4000
     };
 
     test.beforeEach(async ({ request }) => {
@@ -23,224 +26,121 @@ test.describe('Product API tests', () => {
     test('API#14: Create a product (with all correct data) in the catalog', async ({ request }) => {
         const product = getApiValidProduct();
 
+        console.log(`Product ${product.name} was created`);
         const response = await apiClient.post(API.URLS.product.base, product);
+        const responseBody = await assertSuccessResponse(response, API.STATUS.created);
+        console.log(`Product ${product.name} was added to the catalog`);
 
-        expect(response.status()).toBe(API.STATUS.created);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('id');
-        expect(responseBody).toHaveProperty('name', product.name);
-        expect(responseBody).toHaveProperty('description', product.description);
-        expect(responseBody).toHaveProperty('category', product.category);
-        expect(responseBody).toHaveProperty('urlImage', product.urlImage);
-
-        expect(responseBody).toHaveProperty('price');
-        const expectedPrice = parseFloat(product.price);
-        const actualPrice = parseFloat(responseBody.price);
-        expect(actualPrice).toBeCloseTo(expectedPrice, 2);
+        assertProductDataResponse(responseBody, product);
     });
 
     test('API#15: Create a product with a negative price', async ({ request }) => {
         const product = getApiProductWithnegativePrice();
 
+        console.log(`Product ${product.name} was created`);
         const response = await apiClient.post(API.URLS.product.base, product);
 
-        expect(response.status()).toBe(API.STATUS.badRequest);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toContain(API.MESSAGE.negativePrice);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.badRequest);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.badRequest);
+        await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.negativePrice);
     });
 
     test('API#16: Create a product without a name', async ({ request }) => {
         const product = getApiProductWithoutName();
 
+        console.log(`Product ${product.name} was created`);
         const response = await apiClient.post(API.URLS.product.base, product);
 
-        expect(response.status()).toBe(API.STATUS.badRequest);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toContain(API.MESSAGE.emptyProductname);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.badRequest);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.badRequest);
+        await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.emptyProductname);
     });
 
     test('API#17: Create a product without description', async ({ request }) => {
         const product = getApiProductWithoutDescription();
 
+        console.log(`Product ${product.name} was created`);
         const response = await apiClient.post(API.URLS.product.base, product);
 
-        expect(response.status()).toBe(API.STATUS.badRequest);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toContain(API.MESSAGE.emptyProductDescription);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.badRequest);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.badRequest);
+        await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.emptyProductDescription);
     });
 
     test('API#18: Create a product without specifying its category', async ({ request }) => {
         const product = getApiProductWithoutCategory();
 
+        console.log(`Product ${product.name} was created`);
         const response = await apiClient.post(API.URLS.product.base, product);
 
-        expect(response.status()).toBe(API.STATUS.badRequest);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toContain(API.MESSAGE.invalidProductCategory);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.badRequest);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.badRequest);
+        await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.invalidProductCategory);
     });
 
     test('API#19: Create a product without specifying the image URL', async ({ request }) => {
         const product = getApiProductWithoutImage();
 
+        console.log(`Product ${product.name} was created`);
         const response = await apiClient.post(API.URLS.product.base, product);
 
-        expect(response.status()).toBe(API.STATUS.badRequest);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toContain(API.MESSAGE.invalidProductURL);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.badRequest);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.badRequest);
+        await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.invalidProductURL);
     });
 
     test('API#20: Get a list of all products in the catalog', async ({ request }) => {
         const response = await apiClient.get(API.URLS.product.base);
 
-        expect(response.status()).toBe(API.STATUS.ok);
-
-        const responseBody = await response.json();
+        const responseBody = await assertSuccessResponse(response);
         console.log('Response:', JSON.stringify(responseBody, null, 2));
 
         expect(Array.isArray(responseBody)).toBe(true);
         expect(responseBody.length).toBeGreaterThan(0);
 
-        responseBody.forEach(item => {
-            expect(item).toHaveProperty('id');
-            expect(typeof item.id).toBe('number');
-            expect(item).toHaveProperty('name');
-            expect(item.name).not.toBe('');
-            expect(item).toHaveProperty('description');
-            expect(item.description).not.toBe('');
-            expect(item).toHaveProperty('price');
-            expect(item).toHaveProperty('category');
-            expect(item.category).not.toBe('');
-            expect(item).toHaveProperty('urlImage');
-            expect(item.urlImage).not.toBe('');
-        });
+        assertProductListResponse(responseBody);
     });
 
     test('API#21: Get an existing product by ID', async ({ request }) => {
+        console.log(`Product with id ${PRODUCT_ID.existing} exists`);
+
         const response = await apiClient.get(API.URLS.product.byId(PRODUCT_ID.existing));
+        const responseBody = await assertSuccessResponse(response);
 
-        expect(response.status()).toBe(API.STATUS.ok);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('id', db[PRODUCT_ID.existing].id);
-        expect(responseBody).toHaveProperty('name', db[PRODUCT_ID.existing].name);
-        expect(responseBody).toHaveProperty('description', db[PRODUCT_ID.existing].description);
-        expect(responseBody).toHaveProperty('category', db[PRODUCT_ID.existing].category);
-        expect(responseBody).toHaveProperty('urlImage', db[PRODUCT_ID.existing].urlImage);
+        assertProductDataResponse(responseBody, db[PRODUCT_ID.existing]);
     });
 
     test('API#22: Get a non-existent product by ID', async ({ request }) => {
-        const response = await apiClient.get(API.URLS.product.byId(PRODUCT_ID.nonEXisting));
+        console.log(`Product with id ${PRODUCT_ID.existing} does not exist`);
+        const response = await apiClient.get(API.URLS.product.byId(PRODUCT_ID.nonExisting));
 
-        expect(response.status()).toBe(API.STATUS.notFound);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toMatch(API.MESSAGE.productNotFound);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.notFound);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.notFound);
+        await assertErrorResponse(response, API.STATUS.notFound, API.MESSAGE.productNotFound);
     });
 
     test('API#23: Update data for an existing product (all data is correct)', async ({ request }) => {
         const product = getApiValidProduct();
 
+        console.log(`Product ${product.name} was created`);
         const response = await apiClient.patch(API.URLS.product.byId(PRODUCT_ID.existing), product);
+        const responseBody = await assertSuccessResponse(response);
 
-        expect(response.status()).toBe(API.STATUS.ok);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('id');
-        expect(responseBody).toHaveProperty('name', product.name);
-        expect(responseBody).toHaveProperty('description', product.description);
-        expect(responseBody).toHaveProperty('category', product.category);
-        expect(responseBody).toHaveProperty('urlImage', product.urlImage);
-
-        expect(responseBody).toHaveProperty('price');
-        const expectedPrice = parseFloat(product.price);
-        const actualPrice = parseFloat(responseBody.price);
-        expect(actualPrice).toBeCloseTo(expectedPrice, 2);
+        assertProductDataResponse(responseBody, product);
     });
 
     test('API#24: Update data for a non-existent product', async ({ request }) => {
         const product = getApiValidProduct();
 
-        const response = await apiClient.patch(API.URLS.product.byId(PRODUCT_ID.nonEXisting), product);
+        console.log(`Product ${product.name} was created`);
+        const response = await apiClient.patch(API.URLS.product.byId(PRODUCT_ID.nonExisting), product);
 
-        expect(response.status()).toBe(API.STATUS.notFound);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toMatch(API.MESSAGE.productNotFound);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.notFound);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.notFound);
+        await assertErrorResponse(response, API.STATUS.notFound, API.MESSAGE.productNotFound);
     });
 
     test('API#25: Remove an existing product from the catalog', async ({ request }) => {
+        console.log(`Product with id ${PRODUCT_ID.existing} exists`);
+
         const response = await apiClient.delete(API.URLS.product.byId(PRODUCT_ID.existing));
 
-        expect(response.status()).toBe(API.STATUS.ok);
+        const responseBody = await assertSuccessResponse(response);
 
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('id', db[PRODUCT_ID.existing].id);
-        expect(responseBody).toHaveProperty('name', db[PRODUCT_ID.existing].name);
-        expect(responseBody).toHaveProperty('description', db[PRODUCT_ID.existing].description);
-        expect(responseBody).toHaveProperty('category', db[PRODUCT_ID.existing].category);
-        expect(responseBody).toHaveProperty('urlImage', db[PRODUCT_ID.existing].urlImage);
+        assertProductDataResponse(responseBody, db[PRODUCT_ID.existing])
     });
 
     test('API#26: Remove a non-existent product from the catalog', async ({ request }) => {
-        const response = await apiClient.delete(API.URLS.product.byId(PRODUCT_ID.nonEXisting));
+        console.log(`Product with id ${PRODUCT_ID.nonEXisting} does not exist`);
 
-        expect(response.status()).toBe(API.STATUS.notFound);
+        const response = await apiClient.delete(API.URLS.product.byId(PRODUCT_ID.nonExisting));
 
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toMatch(API.MESSAGE.productNotFound);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.notFound);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.notFound);
+        await assertErrorResponse(response, API.STATUS.notFound, API.MESSAGE.productNotFound);
     });
 });

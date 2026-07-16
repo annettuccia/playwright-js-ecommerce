@@ -11,59 +11,41 @@ class ApiClient {
 
     async get(endpoint) {
         const url = `${this.baseURL}${endpoint}`;
-        console.log(`GET ${url}`);
 
         const response = await this.request.get(url);
-
-        console.log(`Response status: ${response.status}`);
-
         return response;
     }
 
     async post(endpoint, data) {
         const url = `${this.baseURL}${endpoint}`;
-        console.log(`POST ${url}`);
 
         const response = await this.request.post(url, {
             headers: this.headers,
             data: data
         });
-
-        console.log(`Response status: ${response.status}`);
-
         return response;
     }
 
     async patch(endpoint, data) {
         const url = `${this.baseURL}${endpoint}`;
-        console.log(`PATCH ${url}`);
 
         const response = await this.request.patch(url, {
             headers: this.headers,
             data: data
         });
-
-        console.log(`Response status: ${response.status}`);
-
         return response;
     }
 
     async delete(endpoint, data = null) {
         const url = `${this.baseURL}${endpoint}`;
-        console.log(`DELETE ${url}`);
-
+        
         const options = {
             headers: this.headers
         };
-
         if (data) {
             options.data = data;
         }
-
         const response = await this.request.delete(url, options);
-
-        console.log(`Response status: ${response.status}`);
-
         return response;
     }
 }

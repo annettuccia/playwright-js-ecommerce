@@ -4,6 +4,7 @@ import { API } from '../../config/apiConstants.js';
 import {
     getApiValidUser, getApiUserWithExistingEmail, getApiUserWithExistingUsername, getApiUserWithoutPassword
 } from '../../helpers/apiTestUserData.js';
+import { assertSuccessResponse, assertErrorResponse, assertUserDataResponse } from '../../helpers/apiAssertions.js';
 
 test.describe('API Registration functionality', () => {
     let apiClient;
@@ -16,66 +17,43 @@ test.describe('API Registration functionality', () => {
     test('API#1: Register new user with valid data', async () => {
         const user = getApiValidUser();
 
+        console.log(`User ${user.username} with email ${user.email} was created`);
         const response = await apiClient.post(API.URLS.auth.register, user);
+        const responseBody = await assertSuccessResponse(response, API.STATUS.created);
+        console.log(`User ${user.username} with email ${user.email} is registered as ${user.role}`);
 
-        expect(response.status()).toBe(API.STATUS.created);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('id');
-        expect(responseBody).toHaveProperty('email', user.email);
-        expect(responseBody).toHaveProperty('username', user.username);
-        expect(responseBody).toHaveProperty('role', user.role);
-        expect(responseBody).toHaveProperty('firstname', user.firstname);
-        expect(responseBody).toHaveProperty('lastname', user.lastname);
-        expect(responseBody).toHaveProperty('phoneNumber', user.phoneNumber);
-        expect(responseBody).toHaveProperty('bucket_id');
+        assertUserDataResponse(responseBody, user);
     });
 
     test('API#2: Register user with existing email', async () => {
         const user = getApiUserWithExistingEmail();
+        console.log(`User ${user.username} with email ${user.email} was created`);
 
         const response = await apiClient.post(API.URLS.auth.register, user);
+        await assertErrorResponse(response, API.STATUS.conflict, API.MESSAGE.emailExists);
 
-        expect(response.status()).toBe(API.STATUS.conflict);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toMatch(API.MESSAGE.emailExists);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.conflict);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.conflict);
+        console.log(`User ${user.username} with email ${user.email} was not registered`);
+        console.log(`An ${API.MESSAGE.emailExists} error occured`);
     });
 
     test('API#3: Register user with existing username', async () => {
         const user = getApiUserWithExistingUsername();
+        console.log(`User ${user.username} with email ${user.email} was created`);
 
         const response = await apiClient.post(API.URLS.auth.register, user);
+        await assertErrorResponse(response, API.STATUS.ISE, API.STATUS_TEXT.ISE);
 
-        expect(response.status()).toBe(API.STATUS.ISE);
-
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.ISE);
-        expect(responseBody).toHaveProperty('message', API.STATUS_TEXT.ISE);
+        console.log(`User ${user.username} with email ${user.email} was not registered`);
     });
 
     test('API#4: Register user without password', async () => {
         const user = getApiUserWithoutPassword();
+        console.log(`User ${user.username} with email ${user.email} was created`);
 
         const response = await apiClient.post(API.URLS.auth.register, user);
+        await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.shortPassword);
 
-        expect(response.status()).toBe(API.STATUS.badRequest);
+        console.log(`User ${user.username} with email ${user.email} was not registered`);
 
-        const responseBody = await response.json();
-        console.log('Response:', JSON.stringify(responseBody, null, 2));
-
-        expect(responseBody).toHaveProperty('message');
-        expect(responseBody.message).toContain(API.MESSAGE.shortPassword);
-        expect(responseBody).toHaveProperty('error', API.STATUS_TEXT.badRequest);
-        expect(responseBody).toHaveProperty('statusCode', API.STATUS.badRequest);
     });
 });
