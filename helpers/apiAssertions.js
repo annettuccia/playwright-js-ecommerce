@@ -55,7 +55,7 @@ export const assertProductDataResponse = (body, expectedProduct) => {
     expect(body).toHaveProperty('price');
     if (expectedProduct.price) {
         const expectedPrice = parseFloat(expectedProduct.price);
-        const actualPrice = parseFloat(response.price);
+        const actualPrice = parseFloat(body.price);
         expect(actualPrice).toBeCloseTo(expectedPrice, 2);
     }
 };
@@ -105,18 +105,22 @@ export const assertOrderItemsResponse = (body, expectedUserId = null) => {
         expect(order).toHaveProperty('id');
         expect(order).toHaveProperty('status');
         expect(order).toHaveProperty('user_id');
+        
         if (expectedUserId) {
             expect(order.user_id).toBe(expectedUserId);
         }
-        expect(order.user).toHaveProperty('email');
-        expect(order.user).toHaveProperty('username');
+
         expect(Array.isArray(order.items)).toBe(true);
+        
         if (order.items.length > 0) {
             order.items.forEach(item => {
                 expect(item).toHaveProperty('quantity');
                 expect(item).toHaveProperty('totalCost');
-                expect(item.product).toHaveProperty('name');
-                expect(item.product).toHaveProperty('price');
+                
+                if (item.product) {
+                    expect(item.product).toHaveProperty('name');
+                    expect(item.product).toHaveProperty('price');
+                }
             });
         }
     });

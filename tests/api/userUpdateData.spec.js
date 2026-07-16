@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ApiClient } from '../../services/ApiClient.js';
+import { UserApi } from '../../services/UserApi.js';
 import { API } from '../../config/apiConstants.js';
 import {
     getApiUserDataUpdate, getApiUserDataUpdateInvalidPhone,
@@ -8,7 +8,7 @@ import {
 import { assertSuccessResponse, assertErrorResponse, assertUserDataResponse } from '../../helpers/apiAssertions.js';
 
 test.describe('User information updation through API', () => {
-    let apiClient;
+    let userApi;
 
     const USER_ID = {
         existing: 2,
@@ -16,7 +16,7 @@ test.describe('User information updation through API', () => {
     };
 
     test.beforeEach(async ({ request }) => {
-        apiClient = new ApiClient(request);
+        userApi = new UserApi(request);
         console.log('\nStarting new information updation test\n');
     });
 
@@ -24,7 +24,7 @@ test.describe('User information updation through API', () => {
         const user = getApiUserDataUpdate();
 
         console.log(`User ${user.username} with email ${user.email} was updated`);
-        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.existing), user);
+        const response = await userApi.updateUserData(USER_ID.existing, user);
         const responseBody = await assertSuccessResponse(response);
         console.log(`User with id ${USER_ID.existing} was updated with new information`);
 
@@ -35,7 +35,7 @@ test.describe('User information updation through API', () => {
         const user = getApiUserDataUpdate();
 
         console.log(`User ${user.username} with email ${user.email} was updated`);
-        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.nonExisting), user);
+        const response = await userApi.updateUserData(USER_ID.nonExisting, user);
         await assertErrorResponse(response, API.STATUS.notFound, API.MESSAGE.userNotFound);
 
         console.log(`User with id ${USER_ID.nonExisting} was not updated`);
@@ -46,7 +46,7 @@ test.describe('User information updation through API', () => {
         const user = getApiUserDataUpdateInvalidPhone();
 
         console.log(`User ${user.username} with email ${user.email} was updated`);
-        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.existing), user);
+        const response = await userApi.updateUserData(USER_ID.existing, user);
         await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.invalidPhoneNumber);
 
         console.log(`User with id ${USER_ID.existing} was not updated`);
@@ -57,7 +57,7 @@ test.describe('User information updation through API', () => {
         const user = getApiUserDataUpdatewithExistingEmail();
 
         console.log(`User ${user.username} with email ${user.email} was updated`);
-        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.existing), user);
+        const response = await userApi.updateUserData(USER_ID.existing, user);
         await assertErrorResponse(response, API.STATUS.conflict, API.MESSAGE.emailExists);
 
         console.log(`User with id ${USER_ID.existing} was not updated`);
@@ -68,7 +68,7 @@ test.describe('User information updation through API', () => {
         const user = getApiUserDataUpdatewithExistingUsername();
 
         console.log(`User ${user.username} with email ${user.email} was updated`);
-        const response = await apiClient.patch(API.URLS.auth.refresh(USER_ID.existing), user);
+        const response = await userApi.updateUserData(USER_ID.existing, user);
         await assertErrorResponse(response, API.STATUS.conflict, API.MESSAGE.usernameExists);
 
         console.log(`User with id ${USER_ID.existing} was not updated`);

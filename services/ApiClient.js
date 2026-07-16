@@ -48,6 +48,6 @@ class ApiClient {
         const response = await this.request.delete(url, options);
         return response;
     }
-}
+};
 
 export { ApiClient };

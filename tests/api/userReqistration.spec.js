@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ApiClient } from '../../services/apiClient.js';
+import { UserApi } from '../../services/UserApi.js';
 import { API } from '../../config/apiConstants.js';
 import {
     getApiValidUser, getApiUserWithExistingEmail, getApiUserWithExistingUsername, getApiUserWithoutPassword
@@ -7,10 +7,10 @@ import {
 import { assertSuccessResponse, assertErrorResponse, assertUserDataResponse } from '../../helpers/apiAssertions.js';
 
 test.describe('API Registration functionality', () => {
-    let apiClient;
+    let userApi;
 
     test.beforeEach(async ({ request }) => {
-        apiClient = new ApiClient(request);
+        userApi = new UserApi(request);
         console.log('\nStarting new API registration test\n');
     });
 
@@ -18,7 +18,7 @@ test.describe('API Registration functionality', () => {
         const user = getApiValidUser();
 
         console.log(`User ${user.username} with email ${user.email} was created`);
-        const response = await apiClient.post(API.URLS.auth.register, user);
+        const response = await userApi.register(user);
         const responseBody = await assertSuccessResponse(response, API.STATUS.created);
         console.log(`User ${user.username} with email ${user.email} is registered as ${user.role}`);
 
@@ -29,7 +29,7 @@ test.describe('API Registration functionality', () => {
         const user = getApiUserWithExistingEmail();
         console.log(`User ${user.username} with email ${user.email} was created`);
 
-        const response = await apiClient.post(API.URLS.auth.register, user);
+        const response = await userApi.register(user);
         await assertErrorResponse(response, API.STATUS.conflict, API.MESSAGE.emailExists);
 
         console.log(`User ${user.username} with email ${user.email} was not registered`);
@@ -40,7 +40,7 @@ test.describe('API Registration functionality', () => {
         const user = getApiUserWithExistingUsername();
         console.log(`User ${user.username} with email ${user.email} was created`);
 
-        const response = await apiClient.post(API.URLS.auth.register, user);
+        const response = await userApi.register(user);
         await assertErrorResponse(response, API.STATUS.ISE, API.STATUS_TEXT.ISE);
 
         console.log(`User ${user.username} with email ${user.email} was not registered`);
@@ -50,7 +50,7 @@ test.describe('API Registration functionality', () => {
         const user = getApiUserWithoutPassword();
         console.log(`User ${user.username} with email ${user.email} was created`);
 
-        const response = await apiClient.post(API.URLS.auth.register, user);
+        const response = await userApi.register(user);
         await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.shortPassword);
 
         console.log(`User ${user.username} with email ${user.email} was not registered`);

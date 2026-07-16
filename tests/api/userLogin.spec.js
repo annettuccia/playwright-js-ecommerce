@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { ApiClient } from '../../services/apiClient.js';
+import { UserApi } from '../../services/UserApi.js';
 import { CREDENTIALS } from '../../config/credentials.js';
 import { API } from '../../config/apiConstants.js';
 import { assertSuccessResponse, assertErrorResponse, assertUserDataResponse } from '../../helpers/apiAssertions.js';
 
 test.describe('API Login functionality', () => {
-    let apiClient;
+    let userApi;
 
     test.beforeEach(async ({ request }) => {
-        apiClient = new ApiClient(request);
+        userApi = new UserApi(request);
         console.log('\nStarting new API registration test\n');
     });
 
@@ -19,7 +19,7 @@ test.describe('API Login functionality', () => {
         };
 
         console.log(`Starting login test with email: ${loginData.email}`);
-        const response = await apiClient.post(API.URLS.auth.login, loginData);
+        const response = await userApi.login(loginData);
         const responseBody = await assertSuccessResponse(response, API.STATUS.created);
         console.log(`User with email ${loginData.email} is logged in`);
 
@@ -39,7 +39,7 @@ test.describe('API Login functionality', () => {
             password: ''
         };
         console.log(`Starting login test without password`);
-        const response = await apiClient.post(API.URLS.auth.login, loginData);
+        const response = await userApi.login(loginData);
 
         await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.emptyPassword);
         console.log(`User is not logged in; an '${API.MESSAGE.emptyPassword}' error message occured`);
@@ -51,7 +51,7 @@ test.describe('API Login functionality', () => {
             password: CREDENTIALS.admin.password
         };
         console.log(`Starting login test without email`);
-        const response = await apiClient.post(API.URLS.auth.login, loginData);
+        const response = await userApi.login(loginData);
 
         await assertErrorResponse(response, API.STATUS.badRequest, API.MESSAGE.emptyEmail);
         console.log(`User is not logged in; an '${API.MESSAGE.emptyEmail}' error message occured`);
@@ -63,7 +63,7 @@ test.describe('API Login functionality', () => {
             password: CREDENTIALS.fakeUser.password
         };
         console.log(`Starting login test with fake user credentials email: ${loginData.email}, password: ${loginData.password}`);
-        const response = await apiClient.post(API.URLS.auth.login, loginData);
+        const response = await userApi.login(loginData);
 
         await assertErrorResponse(response, API.STATUS.unauthorized, API.MESSAGE.invalidLogin);
         console.log(`User is not logged in; an '${API.MESSAGE.invalidLogin}' error message occured`);
